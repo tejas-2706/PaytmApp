@@ -1,4 +1,3 @@
-import { useSession } from "next-auth/react";
 import { AddMoney } from "../../../components/AddMoneyCard";
 import { BalanceCard } from "../../../components/BalanceCard";
 import { OnRampTransactions } from "../../../components/OnRampTransactions";

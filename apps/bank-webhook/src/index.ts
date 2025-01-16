@@ -2,8 +2,10 @@ import express from "express"
 import db from "@repo/db/client"
 const app = express();
 
-app.post("/hdfcWebhook", async(req,res) => {
-    const paymentInformation:{
+app.use(express.json());
+
+app.post("/hdfcWebhook", async (req, res) => {
+    const paymentInformation: {
         token: string,
         userId: string,
         amount: string
@@ -12,32 +14,48 @@ app.post("/hdfcWebhook", async(req,res) => {
         userId: req.body.user_identifier,
         amount: req.body.amount
     }
+    const isValid = await db.onRampTransaction.findUnique({
+        where: {
+            token: paymentInformation.token
+        }
+    });
+    if(isValid?.status == "Success"){
+        return res.status(409).json({
+            message: "Transaction already Added/Successfully Processed!!"
+        });
+    }
+    if(isValid?.amount != Number(paymentInformation.amount)) {
+        return res.status(409).json({
+            message: "Mismatch Amount that of DB"
+        });
+    }
+    // console.log(paymentInformation);
     try {
         await db.$transaction([
-            db.balance.update({
-                where:{
-                    userId:Number(paymentInformation.userId)
+            db.balance.updateMany({
+                where: {
+                    userId: Number(paymentInformation.userId)
                 },
-                data:{
+                data: {
                     amount: {
                         increment: Number(paymentInformation.amount)
                     }
                 }
             }),
-            db.onRampTransaction.update({
-                where:{
+            db.onRampTransaction.updateMany({
+                where: {
                     token: paymentInformation.token
                 },
-                data:{
+                data: {
                     status: "Success"
                 }
-            })    
+            })
         ])
         res.status(200).json({
             message: "captured"
         })
 
-        
+
     } catch (error) {
         res.status(411).json({
             message: "Error Occured"

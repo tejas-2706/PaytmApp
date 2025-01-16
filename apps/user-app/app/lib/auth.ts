@@ -37,10 +37,15 @@ export const authOptions = {
                 const user = await db.user.create({
                     data: {
                         number: credentials.phone,
-                        password: hashedPassword
+                        password: hashedPassword,
+                        Balance: {
+                            create : {
+                                amount : 10000,
+                                locked: 0
+                            }
+                        }
                     }
                 });
-            
                 return {
                     id: user.id.toString(),
                     name: user.name,
@@ -59,7 +64,6 @@ export const authOptions = {
         // TODO: can u fix the type here? Using any is bad
         async session({ token, session }: any) {
             session.user.id = token.sub
-
             return session
         }
     }
