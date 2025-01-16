@@ -5,13 +5,6 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "../../lib/auth";
 
 // Here added changes for branch1
-interface Transaction {
-    amount: number;
-    status: string;
-    timestamp: Date;
-    fromUserId: number;
-    toUserId: number;
-  }
 
 async function getP2PSentTransactions({ userId }: { userId: string }) {
     const txns = await db.p2pTransfer.findMany({
@@ -19,7 +12,7 @@ async function getP2PSentTransactions({ userId }: { userId: string }) {
             fromUserId: Number(userId)
         }
     })
-    return txns.map((tx : Transaction) => ({
+    return txns.map(tx  => ({
         amount: tx.amount,
         status: tx.status,
         timestamp: tx.timestamp,
@@ -34,7 +27,7 @@ async function getP2PReceivedTransactions({ userId }: { userId: string }) {
             toUserId: Number(userId)
         }
     })
-    return to_txns.map((tx : Transaction)=> ({
+    return to_txns.map(tx => ({
         amount: tx.amount,
         status: tx.status,
         timestamp: tx.timestamp,
@@ -58,4 +51,3 @@ export default async function () {
         </div>
     </div>
 }
-
