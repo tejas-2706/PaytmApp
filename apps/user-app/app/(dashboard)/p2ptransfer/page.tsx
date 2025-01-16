@@ -34,7 +34,7 @@ async function getP2PReceivedTransactions({ userId }: { userId: string }) {
             toUserId: Number(userId)
         }
     })
-    return to_txns.map(tx => ({
+    return to_txns.map((tx : Transaction)=> ({
         amount: tx.amount,
         status: tx.status,
         timestamp: tx.timestamp,
