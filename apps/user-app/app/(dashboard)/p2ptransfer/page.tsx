@@ -3,6 +3,7 @@ import { P2PTransactions } from "../../../components/P2PTransactions";
 import db from "@repo/db/client"
 import { getServerSession } from "next-auth";
 import { authOptions } from "../../lib/auth";
+
 async function getP2PSentTransactions({ userId }: { userId: string }) {
     const txns = await db.p2pTransfer.findMany({
         where: {

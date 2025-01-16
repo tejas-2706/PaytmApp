@@ -22,8 +22,8 @@ jobs:
             - name: Generate Prisma Client
               run: npm run db:generate
 
-            - name: Run Build (with no type checking)
-              run: npm run build:ci
+            - name: Run Build
+              run: npm run build
 
 
 
