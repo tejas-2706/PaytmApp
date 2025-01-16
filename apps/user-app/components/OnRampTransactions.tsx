@@ -1,5 +1,12 @@
 import { Card } from "@repo/ui/card"
 
+interface Transaction {  
+    status: string;
+    time : Date;
+    amount: number;
+    provider: string;
+}
+
 export const OnRampTransactions = ({
     transactions
 }: {
@@ -20,7 +27,7 @@ export const OnRampTransactions = ({
     }
     return <Card title="Recent Transactions">
         <div className="pt-2">
-            {transactions.map(t => <div className="flex justify-between">
+            {transactions.map((t : Transaction) => <div className="flex justify-between">
                 <div>
                     <div className="text-sm">
                         {t.status == "Processing"? "Processing INR":"Received INR"}
