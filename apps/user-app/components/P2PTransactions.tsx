@@ -1,5 +1,13 @@
 import { Card } from "@repo/ui/card"
 
+interface Transaction {
+    amount: number,
+    status: string,
+    timestamp: Date,
+    fromUserId: number,
+    toUserId: number
+}
+
 export const P2PTransactions = ({ transactions, txns_type }: {
     transactions: {
         amount: number,
@@ -22,7 +30,7 @@ export const P2PTransactions = ({ transactions, txns_type }: {
     return <div className="w-full">
         <Card title={txns_type === "Sent" ? "Sent Transactions" : "Received Transactions"}>
             <div>
-                {transactions.map(t =>
+                {transactions.map((t : Transaction) =>
                     <div className={`flex justify-between`}>
                         <div>
                             <div className="font-medium">

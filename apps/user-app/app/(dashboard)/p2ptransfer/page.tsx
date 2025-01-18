@@ -4,13 +4,22 @@ import db from "@repo/db/client"
 import { getServerSession } from "next-auth";
 import { authOptions } from "../../lib/auth";
 
+interface Transaction {
+    amount: number;
+    status: string;
+    timestamp: Date;
+    fromUserId:number;
+    toUserId:number;
+}
+
+
 async function getP2PSentTransactions({ userId }: { userId: string }) {
     const txns = await db.p2pTransfer.findMany({
         where: {
             fromUserId: Number(userId)
         }
     })
-    return txns.map(tx => ({
+    return txns.map((tx:Transaction) => ({
         amount: tx.amount,
         status: tx.status,
         timestamp: tx.timestamp,
@@ -27,7 +36,7 @@ async function getP2PReceivedTransactions({ userId }: { userId: string }) {
             toUserId: Number(userId)
         }
     })
-    return to_txns.map(tx => ({
+    return to_txns.map((tx:Transaction) => ({
         amount: tx.amount,
         status: tx.status,
         timestamp: tx.timestamp,
