@@ -24,7 +24,22 @@ jobs:
         context: .
         file: ./docker/Dockerfile.user
         push: true
-        tags: tejas2706/paytm_userapp  # Replace with your Docker Hub username and repository
+        tags: tejas2706/paytm_userapp:lastest  # Replace with your Docker Hub username and repository
 
     - name: Verify Pushed Image
-      run: docker pull tejas2706/paytm_userapp  # Replace with your Docker Hub username and repository
+      run: docker pull tejas2706/paytm_userapp:latest  # Replace with your Docker Hub username and repository
+
+    - name: Deploy to EC2
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USERNAME }}
+        key: ${{ secrets.SSH_KEY }}
+        script: |
+          sudo docker pull tejas2706/paytm_userapp:latest
+          sudo docker stop web-app || true
+          sudo docker rm web-app || true
+          sudo docker run -d --name web-app -p 3005:3000 tejas2706/paytm_userapp:latest
+
+
+   
